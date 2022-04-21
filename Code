@@ -1,8 +1,6 @@
 
 mydata<-read.table("Data.txt",header=T)
 
-
-
 #Examining the data
 
 dim(mydata)	
