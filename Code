@@ -1,4 +1,4 @@
-setwd("~/Documents/Modules/Computing/Statistics Using R/2018_2019")
+
 mydata<-read.table("Data.txt",header=T)
 
 
