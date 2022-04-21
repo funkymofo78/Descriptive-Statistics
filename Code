@@ -1,0 +1,205 @@
+setwd("~/Documents/Modules/Computing/Statistics Using R/2018_2019")
+mydata<-read.table("Data.txt",header=T)
+
+
+
+#Examining the data
+
+dim(mydata)	
+#60 observations, 10 variables
+names(mydata)
+colnames(mydata)
+
+str(mydata)#tell you what each variable is as seen in
+#R
+head(mydata) #first 6 rows
+head(mydata,10) #first 6 rows
+View(mydata)
+mydata[1:10,4]
+mydata[6:7,4]
+mydata[c(6,7),4]
+names(mydata)[4]
+
+
+#Displaying Univariate Data
+
+mydata$Sex
+
+sex.freq <- table(mydata$Sex)
+sex.freq 
+
+prop.table(sex.freq)
+disease.freq <- table(mydata$Disease_Status)
+disease.freq
+prop.table(disease.freq)
+
+pie(mydata$Sex)
+pie(sex.freq)
+help(pie)
+pie(sex.freq, main = "Pie Chart of Sex",
+    labels = c("Male","Female"))
+pie(sex.freq, main = "Pie Chart of Sex", 
+    labels = c("Male", "Female"), 
+    col = rainbow(length(sex.freq)))
+pie(sex.freq, main = "Pie Chart of Sex", 
+    labels = c("Male", "Female"), col = 1:2)
+pie(sex.freq,  main = "Pie Chart of Sex", 
+    labels = c("Male", "Female"), 
+    col = c("blue","red"))
+percent.labels <- 100*sex.freq/sum(sex.freq)
+pie.labels <- paste(percent.labels, "%",sep="")
+pie(sex.freq, main = "Pie Chart of Sex", 
+    labels = pie.labels, 
+    col = rainbow(length(sex.freq)))
+legend("bottomright", c("Male", "Female"), 
+       fill = rainbow(length(sex.freq)))
+help(legend)
+
+Survey_Response<-table(mydata$Survey_Response)
+pie(Survey_Response, main = "Pie Chart of Survey Response", 
+    col = rainbow(length(Survey_Response)))
+legend("bottomright", legend= c(1:5), 
+       fill = rainbow(length(Survey_Response)))
+
+disease.freq = table(mydata$Disease_Status)
+barplot(disease.freq)
+barplot(disease.freq, main = "Bar Chart of Disease Status", 
+        names.arg = c("Affected", "Unaffected"), 
+        col = rainbow(length(disease.freq)) )
+site.freq = table(mydata$Site)
+barplot(site.freq, main = "Bar Chart of Site Information", 
+        col = 2:4 )
+
+hist(mydata$IQ, main = "Histogram of IQ")
+hist(mydata$IQ, main = "Histogram of IQ",
+     col = "red")
+hist(mydata$IQ, main = "Histogram of IQ", 
+     col = rainbow(8), xlab = ("IQ"))
+#can see IQ ranges between 60-140
+# looks roughly symmetric
+hist(mydata$IQ, main = "Histogram of IQ", 
+     col = rainbow(8), xlab = ("IQ"), 
+     ylim = c(0,20))
+
+hist(mydata$Weight, main = "Histogram of Weight", 
+     xlab = ("Weight"), xlim=c(50,100),
+     col=2,ylim=c(0,20))
+#weight not as symmtric as two genders in this data
+hist(mydata$Height)
+hist(mydata$Blood_Pressure)
+
+
+boxplot(mydata$Height,ylab="Height (m)")
+#as median roughly in middle it is roughly symm.
+print(boxplot(mydata$Height))
+#1.7 is the median height
+boxplot(mydata$Weight,ylab="Weight (kg)")
+#as median roughly in middle it is roughly symm.
+print(boxplot(mydata$Weight))
+#median 75.2kg
+
+boxplot(mydata$IQ,ylab="IQ")
+#outlier present, still looks roughly sym. 
+print(boxplot(mydata$IQ,ylab="IQ"))
+boxplot(mydata$Blood_Pressure,
+        ylab="Blood Pressure")
+#outlier present, still looks roughly sym. 
+
+
+
+#Descriptive Statistics
+
+summary(mydata[,c("Height","Weight","IQ")]) 
+
+mean(mydata$Weight)
+median(mydata$Weight)
+mean(mydata$Height)
+median(mydata$Height)
+
+mean(mydata$Height[mydata$Sex == 1])
+#mean height for males is 1.774m
+mean(mydata$Height[mydata$Sex == 2])
+#mean height for females is 1.65m
+table(mydata$Disease_Status)
+median(mydata$Weight[mydata$Disease_Status=="D"])
+median(mydata$Weight[mydata$Disease_Status=="N"])
+
+IQR(mydata$Weight)
+sd(mydata$Weight)
+var(mydata$Weight)
+range(mydata$Weight)
+diff(range(mydata$Weight))
+max(mydata$Weight)-min(mydata$Weight)
+
+sd(mydata$Weight[mydata$Sex==1])
+sd(mydata$Weight[mydata$Sex==2])
+
+
+#Displaying Bivariate Data
+plot(mydata$Height, mydata$Weight, 
+     main = "Scatterplot of Height vs Weight",   
+     xlab = "Height", ylab = "Weight")
+#linear positive relationship, as height increases
+#weight increases.
+
+plot(mydata$Height, mydata$Weight, 
+     main = "Scatterplot of of Height vs Weight", 
+     xlab = "Height", ylab = "Weight", col= mydata$Sex)
+legend("bottomright", c("Males", "Females"), fill= c(1,2))
+#males are taller and weight more in general than females
+
+
+plot(mydata$Weight, mydata$Blood_Pressure,   
+     xlab = "Weight", ylab = "Blood_Pressure")
+#positive linear relationship
+
+plot(mydata$Blood_Pressure~mydata$Height,   
+     xlab = "Height", ylab = "Blood_Pressure")
+#positive linear relationship
+
+
+plot(mydata$Weight, mydata$Blood_Pressure,   
+     xlab = "Weight", ylab = "Blood_Pressure",
+     col=mydata$Disease_Status)
+legend("bottomright", c("Diseased", "Non-Diseased"), 
+       fill= c(1,2))
+#no difference between D and ND for blood pressure vs
+#weight
+
+male_height<-mydata$Height[mydata$Sex==1]  #create a vector of male height
+female_height<-mydata$Height[mydata$Sex==2] #create a vector of female height
+boxplot(male_height, female_height)
+boxplot(male_height, female_height,
+        names = c("Male", "Female"),ylab="Height")
+print(boxplot(male_height, female_height,
+              names = c("Male", "Female"),ylab="Height"))
+#difference between males and females for height
+
+male_weight<-mydata$Weight[mydata$Sex==1]  #create a vector of male height
+female_weight<-mydata$Weight[mydata$Sex==2]
+boxplot(male_weight, female_weight,
+        names = c("Male", "Female"),ylab="Weight")
+boxplot(mydata$Weight~mydata$Sex,
+        names = c("Male", "Female"),ylab="Weight")
+#difference between males and females for weight
+
+aff_bp<-mydata$Blood_Pressure[mydata$Disease_Status
+                              =="D"]
+noaff_bp<-mydata$Blood_Pressure[mydata$Disease_Status
+                                =="N"]
+boxplot(aff_bp,noaff_bp,names=c("Affected","Unaffected"),
+        ylab="Blood Pressure")
+#no obvious difference as IQR overlap and medians very similar
+#affected has an outlier but within possible blood pressure
+#values
+
+boxplot(mydata$IQ~mydata$Site,ylab="IQ")
+#no obvious diff for IQ across the 3 sites
+
+
+disease.table <- table(mydata$Sex,mydata$Disease_Status)
+disease.table
+#seems to more males with the disease than females.
+site.table <- table(mydata$Sex,mydata$Site)
+site.table
+#seems to no sex bias across any site
